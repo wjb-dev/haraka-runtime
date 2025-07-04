@@ -1,0 +1,31 @@
+# config/kind-cluster.yaml
+# Kind (Kubernetes-in-Docker) cluster configuration
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  # Control-plane node; change replicas under `nodes:` for multi-node
+  - role: control-plane
+    image: kindest/node:v1.29.1
+    extraPortMappings:
+      - containerPort: 80        # map HTTP
+        hostPort: 8000
+        protocol: TCP
+  # Uncomment to add a worker node
+  - role: worker
+    image: kindest/node:v1.29.1
+# Networking tweaks
+networking:
+  disableDefaultCNI: true         # If you intend to install a custom CNI later
+  podSubnet: "10.244.0.0/16"      # Pod network CIDR (must align with your CNI)
+
+# You can also configure extra mounts, port mappings, and kubeadm settings here:
+# containerdConfigPatches:
+#   - |-
+#     [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
+#       privileged_without_host_devices = false
+
+# Example extraPortMappings: forward hostPort 8000 → containerPort 80
+# extraPortMappings:
+#   - containerPort: 80
+#     hostPort: 8000
+#     protocol: TCP

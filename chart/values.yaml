@@ -1,0 +1,69 @@
+# Sample Helm values for Haraka Runtime chart
+# Copy to chart/values.yaml and customize each key before deploying
+
+replicaCount: 1               # number of orchestrator pods
+image:
+  repository: haraka/runtime   # e.g. your ECR URI
+  tag: latest                  # override with a concrete tag per environment
+
+service:
+  type: ClusterIP              # or LoadBalancer for external access
+  port: 80
+
+adapters:
+  kafka:
+    brokers: localhost:9092 # comma-separated list
+    # To pin Kafka pods to a specific EKS node group:
+    # Uncomment the following lines and replace `data-workers`
+    # with your nodegroup name.
+    # nodeSelector:
+    #   eks.amazonaws.com/nodegroup: data-workers
+  redis:
+    url: redis://localhost:6379/0
+    # (Similarly, you could pin Redis here)
+    # nodeSelector:
+    #   eks.amazonaws.com/nodegroup: cache-workers
+  openai:
+    # some-property: some-property-value
+    # (Similarly, you could pin Openai here)
+    # nodeSelector:
+    #   eks.amazonaws.com/nodegroup: ai-workers
+  # Example: Postgres adapter settings
+  # postgres:
+  #   image:
+  #     repository: postgres
+  #     tag: "15"
+  #   # Pin Postgres pods to your data node group:
+  #   nodeSelector:
+  #     eks.amazonaws.com/nodegroup: data-workers
+
+  # Example: Mongo adapter settings
+  # mongo:
+  #   image:
+  #     repository: mongo
+  #     tag: "6"
+  #   # Pin Mongo pods to your data node group:
+  #   nodeSelector:
+  #     eks.amazonaws.com/nodegroup: data-workers
+
+# Health probes
+livenessProbe:
+  httpGet:
+    path: /healthz
+    port: 80
+#    initialDelaySeconds: 15
+#    periodSeconds: 20
+readinessProbe:
+  httpGet:
+    path: /readyz
+    port: 80
+#  initialDelaySeconds: 5
+#  periodSeconds: 10
+# Resources
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi

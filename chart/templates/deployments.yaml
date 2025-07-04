@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-app    # e.g., 'haraka-app'
+  labels:
+    app: {{ .Release.Name }}       # selector key for Service
+spec:
+  replicas: 1                      # Number of pod replicas
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}     # Must match pod template labels
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: web
+          image: your-registry/your-image:{{ .Chart.AppVersion }}
+          # Container will serve on port 80
+          ports:
+            - containerPort: 80
+          # Readiness probe to ensure the app is healthy before traffic
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+          # Liveness probe could also be added here
+          # livenessProbe:
+          #   httpGet:
+          #     path: /live
+          #     port: 80
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 20

@@ -1,0 +1,41 @@
+# Default values for Haraka Runtime Helm chart
+# See Chart.yaml for chart metadata
+
+replicaCount: 1            # Number of orchestrator replicas
+
+image:
+  repository: haraka/runtime         # e.g. your ECR URI or DockerHub repo
+  tag: latest                        # override with specific tag in prod
+
+service:
+  type: ClusterIP       # or LoadBalancer for external access
+  port: 80
+
+resources:             # CPU/memory requests & limits
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+livenessProbe:         # ensure healthy containers
+  httpGet:
+    path: /healthz
+    port: 80
+  initialDelaySeconds: 15
+  periodSeconds: 20
+
+readinessProbe:        # ensure traffic only goes to ready pods
+  httpGet:
+    path: /readyz
+    port: 80
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+# Adapter-specific settings can go under a top-level key:
+adapters:
+  kafka:
+    brokers: localhost:9092
+  redis:
+    url: redis://localhost:6379/0

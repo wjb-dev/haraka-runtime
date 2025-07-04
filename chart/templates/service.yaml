@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-svc    # e.g., 'haraka-svc'
+spec:
+  type: ClusterIP                  # Exposes service on a cluster-internal IP
+  selector:
+    app: {{ .Release.Name }}       # Must match .deployment labels
+  ports:
+    - port: 80                     # The port that this Service exposes
+      targetPort: 80               # Pod port to forward to
+      protocol: TCP
+  # For LoadBalancer in cloud environments, change to:
+  # type: LoadBalancer
+  # annotations:
+  #   service.beta.kubernetes.io/aws-load-balancer-internal: "true"

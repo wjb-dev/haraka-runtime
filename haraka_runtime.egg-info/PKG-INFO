@@ -1,0 +1,6 @@
+Metadata-Version: 2.1
+Name: haraka-runtime
+Version: 0.1.0
+Summary: Haraka Runtime SDK for building adapters and orchestrating services
+Requires-Python: >=3.8
+Requires-Dist: PyYAML

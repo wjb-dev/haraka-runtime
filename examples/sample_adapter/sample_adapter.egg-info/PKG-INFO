@@ -1,0 +1,34 @@
+Metadata-Version: 2.4
+Name: sample_adapter
+Version: 0.1.0
+Summary: A minimal sample adapter demonstrating the Haraka Adapter SDK integration.
+Author-email: Your Name <you@example.com>
+License: MIT
+Project-URL: Documentation, https://github.com/your-org/haraka-adapter/blob/main/docs/sdk_integration.md
+Project-URL: Source, https://github.com/your-org/haraka-adapter
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: haraka-runtime
+
+<!-- README.md -->
+# Sample Adapter
+
+A minimal sample adapter demonstrating how to integrate with the Haraka Adapter SDK.
+
+## Overview
+
+This project provides a complete example of:
+- Defining an adapter class by subclassing `Adapter`.
+- Configuring build metadata via `pyproject.toml`.
+- Running adapter lifecycle methods both standalone and within tests.
+
+## Installation
+
+Install the SDK and adapter in editable mode:
+
+```bash
+cd examples/sample_adapter
+pip install -e .

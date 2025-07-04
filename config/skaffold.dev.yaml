@@ -1,0 +1,16 @@
+# Skaffold override for the 'dev' profile
+# apiVersion must match root skaffold.yaml: skaffold/v2beta31
+# Merge with: skaffold dev -f skaffold.yaml -f config/skaffold.dev.yaml
+
+apiVersion: skaffold/v2beta31
+kind: Config
+
+profiles:
+  - name: dev
+    build:
+      local:
+        push: false           # use local images only
+    deploy:
+      kubectl:
+        manifests:
+          - k8s/app.yaml      # core manifest

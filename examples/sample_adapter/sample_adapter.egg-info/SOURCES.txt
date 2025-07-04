@@ -1,0 +1,9 @@
+README.md
+main.py
+pyproject.toml
+sample_adapter.egg-info/PKG-INFO
+sample_adapter.egg-info/SOURCES.txt
+sample_adapter.egg-info/dependency_links.txt
+sample_adapter.egg-info/requires.txt
+sample_adapter.egg-info/top_level.txt
+tests/test_adapter.py
