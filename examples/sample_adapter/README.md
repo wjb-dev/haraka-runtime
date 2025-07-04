@@ -1,19 +1,7 @@
-<!-- README.md -->
-# Sample Adapter
+# Sample Adapter (Archived)
 
-A minimal sample adapter demonstrating how to integrate with the Haraka Adapter SDK.
+This folder used to contain a full sample adapter, but the canonical, actively maintained example now lives in its own repository:
 
-## Overview
+👉 https://github.com/wjb-dev/sample_adapter
 
-This project provides a complete example of:
-- Defining an adapter class by subclassing `Adapter`.
-- Configuring build metadata via `pyproject.toml`.
-- Running adapter lifecycle methods both standalone and within tests.
-
-## Installation
-
-Install the SDK and adapter in editable mode:
-
-```bash
-cd examples/sample_adapter
-pip install -e .
+Please head over there for the latest code, tests, documentation, and CI workflow.

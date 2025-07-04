@@ -1,7 +1,8 @@
 import pytest
 
-from orchestrator.orchestrator import Orchestrator
-from core.interfaces import Adapter
+from src.haraka_runtime.core.interfaces import Adapter
+from src.haraka_runtime.orchestrator.orchestrator import Orchestrator
+
 
 # Dummy adapter implementation for testing
 class DummyAdapter(Adapter):

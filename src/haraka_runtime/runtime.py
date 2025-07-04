@@ -8,8 +8,8 @@ from fastapi import FastAPI
 from pathlib import Path
 from contextlib import asynccontextmanager
 
-from orchestrator.orchestrator import Orchestrator
-from loader.manifest_loader import load_adapter_from_manifest
+from src.haraka_runtime.orchestrator import Orchestrator
+from src.haraka_runtime.loader import load_adapter_from_manifest
 from config.settings import settings  # Project-level config via pydantic
 from app.routes import include_routers  # Optional route aggregator
 

@@ -27,9 +27,10 @@ pip install -r requirements.txt
 ## Quick Start
 
 ```python
-from orchestrator.orchestrator import Orchestrator
-from core.interfaces import Service
+from src.haraka_runtime.orchestrator import Orchestrator
+from src.haraka_runtime.core import Service
 from fastapi import FastAPI
+
 
 # 1. Define a Service
 class MyService(Service):
@@ -41,6 +42,7 @@ class MyService(Service):
     async def shutdown(self):
         print("MyService shutting down…")
 
+
 # 2. Instantiate orchestrator
 orch = Orchestrator()
 
@@ -48,9 +50,13 @@ orch = Orchestrator()
 orch.use(MyService(), priority=5, dependencies=[])
 
 # 4. Run (attach to your app)
-app = FastAPI()            # or any DocsProvider
+app = FastAPI()  # or any DocsProvider
+
+
 class Settings:
     port = 8000
+
+
 await orch.run(Settings(), app)
 
 # 5. Later, shut down gracefully
@@ -102,25 +108,32 @@ await orch.shutdown()
 ### Basic Orchestration
 
 ```python
-from orchestrator.orchestrator import Orchestrator
-from core.interfaces import Service
+from src.haraka_runtime.orchestrator import Orchestrator
+from src.haraka_runtime.core import Service
+
 
 class DBService(Service):
     name = "db"
+
     async def startup(self): ...
+
     async def shutdown(self): ...
+
 
 class APIService(Service):
     name = "api"
+
     async def startup(self): ...
+
     async def shutdown(self): ...
+
 
 orch = Orchestrator()
 orch.use(DBService(), priority=10)
 orch.use(APIService(), priority=5, dependencies=["db"])
 
-await orch.run(settings, app)     # starts db → api
-await orch.shutdown()             # stops api → db
+await orch.run(settings, app)  # starts db → api
+await orch.shutdown()  # stops api → db
 ```
 
 ### Readiness Gating

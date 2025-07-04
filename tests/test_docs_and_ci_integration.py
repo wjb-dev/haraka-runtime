@@ -5,7 +5,8 @@ import socket
 
 from mypy import api as mypy_api
 
-from orchestrator.orchestrator import Orchestrator, Settings, DocsProvider
+from src.haraka_runtime.orchestrator.orchestrator import Orchestrator, Settings, DocsProvider
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Test for docs URL printing
@@ -63,7 +64,7 @@ def test_type_hints_present():
     """
     # Compute path to orchestrator.py
     root = Path(__file__).parent.parent
-    orchestrator_file = str(root / "orchestrator" / "orchestrator.py")
+    orchestrator_file = str(root / "src" / "haraka_runtime" / "orchestrator" / "orchestrator.py")
     result = mypy_api.run([orchestrator_file, "--ignore-missing-imports"])
     stdout, stderr, exit_status = result
     assert exit_status == 0, f"mypy errors:\nSTDOUT:\n{stdout}\nSTDERR:\n{stderr}"

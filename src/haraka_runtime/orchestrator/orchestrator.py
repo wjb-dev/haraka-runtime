@@ -5,7 +5,9 @@ from enum import Enum, auto
 from typing import Awaitable, Callable, Dict, List, Optional, Tuple, Set, Protocol
 
 from haraka.utils import Logger
-from core.interfaces import Adapter
+
+from src.haraka_runtime.core.interfaces import Adapter
+
 
 class DocsProvider(Protocol):
     docs_url: str

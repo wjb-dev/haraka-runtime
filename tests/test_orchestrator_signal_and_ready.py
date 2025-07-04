@@ -2,8 +2,9 @@ import pytest
 import asyncio
 import signal
 
-from orchestrator.orchestrator import Orchestrator, LifecycleState
-from core.interfaces import Adapter
+from src.haraka_runtime.core.interfaces import Adapter
+from src.haraka_runtime.orchestrator.orchestrator import Orchestrator, LifecycleState
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Dummy adapter for mark_ready tests
