@@ -6,11 +6,16 @@ import socket
 import pytest
 
 from haraka_runtime.core.interfaces import Adapter
-from haraka_runtime.orchestrator.orchestrator import Orchestrator, LifecycleState, DocsProvider, Settings
+from haraka_runtime.orchestrator.orchestrator import (
+    Orchestrator,
+    DocsProvider,
+    Settings,
+)
 
 
 class DummyAdapter(Adapter):
     """Minimal adapter stub with runtime injected dynamically."""
+
     def __init__(self, name):
         self.name = name
         self.start_called = False
@@ -35,7 +40,7 @@ class FakeApp(DocsProvider):
 def orch(caplog):
     # Create a plain Python logger for capture
     logger = logging.getLogger("test_orch")
-    logger.setLevel(logging.DEBUG)               # ← allow debug logs
+    logger.setLevel(logging.DEBUG)  # ← allow debug logs
     logger.handlers.clear()
     logger.addHandler(logging.StreamHandler())
 
@@ -45,6 +50,7 @@ def orch(caplog):
     orch = Orchestrator()
     orch.logger = logger
     return orch
+
 
 def test_use_registers_adapter_and_warns_on_duplicate(orch, caplog):
     svc = DummyAdapter("A")
@@ -70,11 +76,16 @@ def test_mark_ready_logs_info_first_and_debug_on_repeat_and_warns_unknown(orch, 
     assert "DEBUG" in msgs
 
 
-def test_wait_for_all_ready_completes_when_all_marked_and_times_out_if_not(orch):    # happy path
-    svc1 = DummyAdapter("X"); svc2 = DummyAdapter("Y")
-    orch.use(svc1); orch.use(svc2)
+def test_wait_for_all_ready_completes_when_all_marked_and_times_out_if_not(
+    orch,
+):  # happy path
+    svc1 = DummyAdapter("X")
+    svc2 = DummyAdapter("Y")
+    orch.use(svc1)
+    orch.use(svc2)
     # mark ready immediately
-    orch.mark_ready("X"); orch.mark_ready("Y")
+    orch.mark_ready("X")
+    orch.mark_ready("Y")
     # should not raise
     asyncio.run(orch.wait_for_all_ready(timeout=0.1))
 
@@ -86,7 +97,9 @@ def test_wait_for_all_ready_completes_when_all_marked_and_times_out_if_not(orch)
         asyncio.run(orch2.wait_for_all_ready(timeout=0.0))
 
 
-def test__resolve_start_order_raises_on_unknown_and_circular_and_sorts_by_priority(orch):
+def test__resolve_start_order_raises_on_unknown_and_circular_and_sorts_by_priority(
+    orch,
+):
     # unknown dependency
     svc = DummyAdapter("A")
     orch.use(svc, dependencies=["missing"])
@@ -94,7 +107,8 @@ def test__resolve_start_order_raises_on_unknown_and_circular_and_sorts_by_priori
         orch._resolve_start_order()
 
     # circular dependency
-    a = DummyAdapter("a"); b = DummyAdapter("b")
+    a = DummyAdapter("a")
+    b = DummyAdapter("b")
     orch2 = Orchestrator()
     orch2.use(a, dependencies=["b"])
     orch2.use(b, dependencies=["a"])
@@ -103,7 +117,9 @@ def test__resolve_start_order_raises_on_unknown_and_circular_and_sorts_by_priori
 
     # priority ordering
     orch3 = Orchestrator()
-    a = DummyAdapter("a"); b = DummyAdapter("b"); c = DummyAdapter("c")
+    a = DummyAdapter("a")
+    b = DummyAdapter("b")
+    c = DummyAdapter("c")
     orch3.use(a, priority=1)
     orch3.use(b, priority=10)
     orch3.use(c, priority=5, dependencies=["a"])
@@ -113,11 +129,14 @@ def test__resolve_start_order_raises_on_unknown_and_circular_and_sorts_by_priori
 
 
 def test_run_and_shutdown_warns_on_reentry_and_shutdown_before_run(orch, caplog):
-    settings = FakeSettings(); app = FakeApp()
+    settings = FakeSettings()
+    app = FakeApp()
 
     # shutdown before run
     asyncio.run(orch.shutdown())
-    assert any("Not running or already destroyed" in rec.getMessage() for rec in caplog.records)
+    assert any(
+        "Not running or already destroyed" in rec.getMessage() for rec in caplog.records
+    )
 
     # run once
     orch_single = Orchestrator()
@@ -130,16 +149,20 @@ def test_run_and_shutdown_warns_on_reentry_and_shutdown_before_run(orch, caplog)
 
     # second run should warn
     asyncio.run(orch_single.run(settings, app))
-    assert any("Already started or shut down" in rec.getMessage() for rec in caplog.records)
+    assert any(
+        "Already started or shut down" in rec.getMessage() for rec in caplog.records
+    )
 
 
 @pytest.mark.asyncio
 async def test__on_signal_schedules_shutdown_and_logs(orch, caplog, monkeypatch):
     # Swap in our fake shutdown
     called = False
+
     async def fake_shutdown():
         nonlocal called
         called = True
+
     monkeypatch.setattr(orch, "shutdown", fake_shutdown)
 
     # Now _on_signal will schedule fake_shutdown() on the current loop
@@ -172,6 +195,7 @@ async def test__wrap_task_propagates_exceptions_and_logs_failure(orch, caplog):
 
     assert any("Task fails failed:" in rec.getMessage() for rec in caplog.records)
 
+
 @pytest.mark.asyncio
 async def test__wrap_task_handles_cancellation_and_logs_message(orch, caplog):
     # 1) swap in a simple logger that caplog will catch
@@ -198,8 +222,11 @@ async def test__wrap_task_handles_cancellation_and_logs_message(orch, caplog):
     assert any("cancelled" in rec.getMessage().lower() for rec in caplog.records)
 
 
-def test__print_docs_url_logs_urls_on_success_and_warns_on_error(orch, caplog, monkeypatch):
-    settings = FakeSettings(); app = FakeApp()
+def test__print_docs_url_logs_urls_on_success_and_warns_on_error(
+    orch, caplog, monkeypatch
+):
+    settings = FakeSettings()
+    app = FakeApp()
     # success
     orch._print_docs_url(settings, app)
     assert any("Swagger UI available" in rec.getMessage() for rec in caplog.records)
@@ -207,8 +234,12 @@ def test__print_docs_url_logs_urls_on_success_and_warns_on_error(orch, caplog, m
     # failure branch: monkeypatch socket to raise
     class BadSocket:
         @staticmethod
-        def gethostbyname(x): raise OSError("no host")
+        def gethostbyname(x):
+            raise OSError("no host")
+
     monkeypatch.setattr(socket, "gethostbyname", BadSocket.gethostbyname)
     caplog.clear()
     orch._print_docs_url(settings, app)
-    assert any("Failed to determine docs URL" in rec.getMessage() for rec in caplog.records)
+    assert any(
+        "Failed to determine docs URL" in rec.getMessage() for rec in caplog.records
+    )
