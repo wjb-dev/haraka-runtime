@@ -3,8 +3,8 @@ import yaml
 from pathlib import Path
 from types import ModuleType
 
-from src.haraka_runtime.core.interfaces import Adapter
-from src.haraka_runtime.orchestrator.orchestrator import Orchestrator
+from haraka_runtime.core.interfaces import Adapter
+from haraka_runtime.orchestrator.orchestrator import Orchestrator
 
 
 def load_adapter_from_manifest(path: Path, runtime: Orchestrator) -> Adapter:

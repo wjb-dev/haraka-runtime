@@ -2,9 +2,9 @@ import sys
 import yaml
 import pytest
 
-from src.haraka_runtime.core.interfaces import Adapter
-from src.haraka_runtime.loader.manifest_loader import load_adapter_from_manifest
-from src.haraka_runtime.orchestrator.orchestrator import Orchestrator
+from haraka_runtime.core.interfaces import Adapter
+from haraka_runtime.loader.manifest_loader import load_adapter_from_manifest
+from haraka_runtime.orchestrator.orchestrator import Orchestrator
 
 
 # Constants for dummy module
@@ -20,7 +20,7 @@ def dummy_adapter_module(tmp_path, monkeypatch):
     # Write dummy_adapter_module.py
     module_path = tmp_path / f"{DUMMY_MODULE_NAME}.py"
     module_source = f"""
-from src.haraka_runtime.core.interfaces import Adapter
+from haraka_runtime.core.interfaces import Adapter
 
 class {DUMMY_CLASS_NAME}(Adapter):
     def __init__(self, **kwargs):

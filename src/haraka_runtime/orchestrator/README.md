@@ -27,8 +27,8 @@ pip install -r requirements.txt
 ## Quick Start
 
 ```python
-from src.haraka_runtime.orchestrator import Orchestrator
-from src.haraka_runtime.core import Service
+from haraka_runtime.orchestrator import Orchestrator
+from haraka_runtime.core import Service
 from fastapi import FastAPI
 
 
@@ -108,8 +108,8 @@ await orch.shutdown()
 ### Basic Orchestration
 
 ```python
-from src.haraka_runtime.orchestrator import Orchestrator
-from src.haraka_runtime.core import Service
+from haraka_runtime.orchestrator import Orchestrator
+from haraka_runtime.core import Service
 
 
 class DBService(Service):

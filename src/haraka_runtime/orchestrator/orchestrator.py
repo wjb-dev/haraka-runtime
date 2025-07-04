@@ -6,7 +6,7 @@ from typing import Awaitable, Callable, Dict, List, Optional, Tuple, Set, Protoc
 
 from haraka.utils import Logger
 
-from src.haraka_runtime.core.interfaces import Adapter
+from haraka_runtime.core.interfaces import Adapter
 
 
 class DocsProvider(Protocol):

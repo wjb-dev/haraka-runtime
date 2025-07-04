@@ -5,7 +5,7 @@ import socket
 
 from mypy import api as mypy_api
 
-from src.haraka_runtime.orchestrator.orchestrator import (
+from haraka_runtime.orchestrator.orchestrator import (
     Orchestrator,
     Settings,
     DocsProvider,

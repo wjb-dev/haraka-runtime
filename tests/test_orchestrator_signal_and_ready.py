@@ -2,8 +2,8 @@ import pytest
 import asyncio
 import signal
 
-from src.haraka_runtime.core.interfaces import Adapter
-from src.haraka_runtime.orchestrator.orchestrator import Orchestrator, LifecycleState
+from haraka_runtime.core.interfaces import Adapter
+from haraka_runtime.orchestrator.orchestrator import Orchestrator, LifecycleState
 
 
 # ────────────────────────────────────────────────────────────────────────────
