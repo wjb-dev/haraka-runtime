@@ -1,0 +1,9 @@
+[run]
+# Only measure coverage for the 'app' package
+source = src
+
+# Exclude auto-generated __init__.py and all test files
+omit =
+    */__init__.py
+    tests/*.py
+    runtime.py

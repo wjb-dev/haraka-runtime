@@ -4,12 +4,13 @@ import pytest
 
 from src.haraka_runtime.core.interfaces import Adapter
 from src.haraka_runtime.loader.manifest_loader import load_adapter_from_manifest
-from src.haraka_runtime.orchestrator.orchestrator import Orchestrator, Settings, DocsProvider
+from src.haraka_runtime.orchestrator.orchestrator import Orchestrator
 
 
 # Constants for dummy module
 DUMMY_MODULE_NAME = "dummy_adapter_module"
 DUMMY_CLASS_NAME = "DummyAdapter"
+
 
 @pytest.fixture(autouse=True)
 def dummy_adapter_module(tmp_path, monkeypatch):
@@ -18,7 +19,7 @@ def dummy_adapter_module(tmp_path, monkeypatch):
     """
     # Write dummy_adapter_module.py
     module_path = tmp_path / f"{DUMMY_MODULE_NAME}.py"
-    module_source = f'''
+    module_source = f"""
 from src.haraka_runtime.core.interfaces import Adapter
 
 class {DUMMY_CLASS_NAME}(Adapter):
@@ -31,7 +32,7 @@ class {DUMMY_CLASS_NAME}(Adapter):
 
     async def shutdown(self):
         pass
-'''
+"""
     module_path.write_text(module_source)
 
     # Prepend tmp_path to sys.path for import
@@ -53,7 +54,7 @@ def test_load_valid_adapter(tmp_path):
         "entrypoint": f"{DUMMY_MODULE_NAME}:{DUMMY_CLASS_NAME}",
         "settings": {"name": "svc1", "foo": "bar"},
         "priority": 42,
-        "dependencies": ["dep1", "dep2"]
+        "dependencies": ["dep1", "dep2"],
     }
     manifest_path = tmp_path / "adapter.yaml"
     manifest_path.write_text(yaml.safe_dump(manifest))
@@ -108,10 +109,12 @@ def test_type_error_for_non_adapter_class(tmp_path, monkeypatch):
     """
     # Create module with class NotAnAdapter
     bad_mod = tmp_path / "bad_module.py"
-    bad_mod.write_text("""
+    bad_mod.write_text(
+        """
 class NotAnAdapter:
     pass
-""")
+"""
+    )
     monkeypatch.syspath_prepend(str(tmp_path))
     if "bad_module" in sys.modules:
         del sys.modules["bad_module"]
@@ -132,7 +135,7 @@ def test_loader_uses_default_priority_and_deps(tmp_path):
     """
     manifest = {
         "entrypoint": f"{DUMMY_MODULE_NAME}:{DUMMY_CLASS_NAME}",
-        "settings": {"name": "svc2"}
+        "settings": {"name": "svc2"},
         # priority and dependencies omitted
     }
     manifest_path = tmp_path / "adapter.yaml"

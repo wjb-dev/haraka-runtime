@@ -1,4 +1,3 @@
-# config/kind-cluster.yaml
 # Kind (Kubernetes-in-Docker) cluster configuration
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4

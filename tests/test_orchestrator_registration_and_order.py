@@ -19,6 +19,7 @@ class DummyAdapter(Adapter):
         # Record shutdown invocation
         self._record.append(f"stop:{self.name}")
 
+
 @pytest.mark.asyncio
 async def test_registration_records_adapter():
     orch = Orchestrator()
@@ -35,6 +36,7 @@ async def test_registration_records_adapter():
     assert pri == 7
     assert deps == ["depX", "depY"]
 
+
 async def set_up():
     orch = Orchestrator()
     rec = []
@@ -49,7 +51,9 @@ async def set_up():
     orch.use(svc_c, priority=7)  # no dependencies
 
     # Run orchestrator
-    await orch.run(settings=type("S", (), {"port": 0})(), app=type("D", (), {"docs_url": "/"})())
+    await orch.run(
+        settings=type("S", (), {"port": 0})(), app=type("D", (), {"docs_url": "/"})()
+    )
     # Shutdown orchestrator
     await orch.shutdown()
 
@@ -63,6 +67,7 @@ async def test_startup_order_priority_and_deps():
     startup_calls = [r for r in rec if r.startswith("start")]
     assert startup_calls == ["start:A", "start:C", "start:B"]
 
+
 @pytest.mark.asyncio
 async def test_shutdown_order_reverse():
     rec = await set_up()
@@ -70,6 +75,7 @@ async def test_shutdown_order_reverse():
     # Extract shutdown calls and verify reverse order
     shutdown_calls = [r for r in rec if r.startswith("stop")]
     assert shutdown_calls == ["stop:B", "stop:C", "stop:A"]
+
 
 def test_circular_dependency_raises():
     orch = Orchestrator()

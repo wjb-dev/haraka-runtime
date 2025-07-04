@@ -11,6 +11,7 @@ class Adapter(abc.ABC):
     @abc.abstractmethod
     async def shutdown(self): ...
 
+
 class DocsProvider(Protocol):
     docs_url: str
     openapi_url: str

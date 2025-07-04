@@ -1,6 +1,6 @@
 # Skaffold override for the 'dev' profile
 # apiVersion must match root skaffold.yaml: skaffold/v2beta31
-# Merge with: skaffold dev -f skaffold.yaml -f config/skaffold.dev.yaml
+# Merge with: skaffold dev -f skaffold.yaml -f infra/skaffold/profiles/skaffold.dev.yaml
 
 apiVersion: skaffold/v2beta31
 kind: Config

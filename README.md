@@ -44,13 +44,13 @@
 
 > **Reference:** Customize these samples before deploying.
 
-| File                                    | Description                                      |
-|-----------------------------------------|--------------------------------------------------|
-| `config/kind-cluster.yaml`             | Kind cluster definition (annotated)              |
-| `config/skaffold.dev.yaml`             | Skaffold "dev" override profile                  |
-| `config/skaffold.prod.yaml`            | Skaffold "prod" override profile                 |
-| `config/helm.values.sample.yaml`       | Sample Helm values file                          |
-| `.env.example`                          | All required environment variables               |
+| File                                        | Description                                      |
+|---------------------------------------------|--------------------------------------------------|
+| `infra/kind/kind-cluster.yaml`              | Kind cluster definition (annotated)              |
+| `infra/skaffold/profiles/skaffold.dev.yaml` | Skaffold "dev" override profile                  |
+| `infra/skaffold/profiles/skaffold.prod.yaml` | Skaffold "prod" override profile                 |
+| `infra/helm/values.yaml`         | Helm values file                          |
+| `.env.example`                              | All required environment variables               |
 
 ---
 

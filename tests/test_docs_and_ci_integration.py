@@ -5,12 +5,17 @@ import socket
 
 from mypy import api as mypy_api
 
-from src.haraka_runtime.orchestrator.orchestrator import Orchestrator, Settings, DocsProvider
+from src.haraka_runtime.orchestrator.orchestrator import (
+    Orchestrator,
+    Settings,
+    DocsProvider,
+)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
 # Test for docs URL printing
 # ──────────────────────────────────────────────────────────────────────────────
+
 
 def test_print_docs_url_formats_correctly(caplog, monkeypatch):
     """
@@ -46,17 +51,21 @@ def test_print_docs_url_formats_correctly(caplog, monkeypatch):
 
     # Validate localhost URL
     assert any(
-        "Swagger UI available at: http://localhost:1234/foo" in msg
-        for msg in messages
+        "Swagger UI available at: http://localhost:1234/foo" in msg for msg in messages
     ), f"Localhost log not found in: {messages}"
 
     # Validate network URL (dynamic host)
-    host = socket.gethostbyname(socket.gethostname()).replace('.', r'\.')
+    host = socket.gethostbyname(socket.gethostname()).replace(".", r"\.")
     pattern = rf"Network Swagger UI available at: http://{host}:1234/foo"
-    assert any(re.search(pattern, msg) for msg in messages), f"Network log not found in: {messages}"
+    assert any(
+        re.search(pattern, msg) for msg in messages
+    ), f"Network log not found in: {messages}"
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Meta-test for type hints
 # ──────────────────────────────────────────────────────────────────────────────
+
 
 def test_type_hints_present():
     """
@@ -64,7 +73,9 @@ def test_type_hints_present():
     """
     # Compute path to orchestrator.py
     root = Path(__file__).parent.parent
-    orchestrator_file = str(root / "src" / "haraka_runtime" / "orchestrator" / "orchestrator.py")
+    orchestrator_file = str(
+        root / "src" / "haraka_runtime" / "orchestrator" / "orchestrator.py"
+    )
     result = mypy_api.run([orchestrator_file, "--ignore-missing-imports"])
     stdout, stderr, exit_status = result
     assert exit_status == 0, f"mypy errors:\nSTDOUT:\n{stdout}\nSTDERR:\n{stderr}"

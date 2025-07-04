@@ -38,6 +38,6 @@ def load_adapter_from_manifest(path: Path, runtime: Orchestrator) -> Adapter:
     runtime.use(
         adapter,
         priority=manifest.get("priority", 0),
-        dependencies=manifest.get("dependencies", [])
+        dependencies=manifest.get("dependencies", []),
     )
     return adapter

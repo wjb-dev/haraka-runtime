@@ -1,5 +1,6 @@
 # tests/conftest.py
-# Ensure the project root directory is in sys.path so the orchestrator module can be imported
+# Ensure the project root directory is in sys.path so the orchestrator
+# module can be imported
 
 import sys
 from pathlib import Path

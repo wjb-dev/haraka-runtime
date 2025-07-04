@@ -12,13 +12,16 @@ from src.haraka_runtime.core.interfaces import Adapter
 class DocsProvider(Protocol):
     docs_url: str
 
+
 class Settings(Protocol):
     port: int
+
 
 class LifecycleState(Enum):
     UNINITIALIZED = auto()
     STARTED = auto()
     DESTROYED = auto()
+
 
 class Orchestrator:
     def __init__(self, variant: str = "PyFast"):
@@ -50,8 +53,12 @@ class Orchestrator:
         self._registry[name] = (adapter, priority, deps)
         self._adapter_events[name] = asyncio.Event()
         # set runtime attribute dynamically
-        setattr(adapter, 'runtime', self)
-        self.logger.debug(f"🛎️ Registered adapter: {name} (priority={priority}, dependencies={deps})")
+        setattr(adapter, "runtime", self)
+        self.logger.debug(
+            f"🛎️ Registered adapter: {name} "
+            f"(priority={priority}, "
+            f"dependencies={deps})"
+        )
 
     def mark_ready(self, name: str):
         event = self._adapter_events.get(name)
@@ -67,16 +74,20 @@ class Orchestrator:
         try:
             await asyncio.wait_for(
                 asyncio.gather(*(evt.wait() for evt in self._adapter_events.values())),
-                timeout=timeout
+                timeout=timeout,
             )
             self.logger.info("✅ All declared adapters are up and running!")
         except asyncio.TimeoutError:
             unready = [n for n, e in self._adapter_events.items() if not e.is_set()]
-            self.logger.error("❌ Timed out waiting for adapters", extra={"unready_adapters": unready})
+            self.logger.error(
+                "❌ Timed out waiting for adapters", extra={"unready_adapters": unready}
+            )
             raise
 
     def _resolve_start_order(self) -> List[Adapter]:
-        graph: Dict[str, Set[str]] = {name: set(deps) for name, (_, _, deps) in self._registry.items()}
+        graph: Dict[str, Set[str]] = {
+            name: set(deps) for name, (_, _, deps) in self._registry.items()
+        }
         order: List[str] = []
         temp = set()
 
@@ -87,7 +98,9 @@ class Orchestrator:
                 temp.add(node)
                 for dep in graph.get(node, []):
                     if dep not in graph:
-                        raise RuntimeError(f"Unknown dependency '{dep}' for adapter '{node}'")
+                        raise RuntimeError(
+                            f"Unknown dependency '{dep}' for adapter '{node}'"
+                        )
                     visit(dep)
                 temp.remove(node)
                 order.append(node)
@@ -100,7 +113,9 @@ class Orchestrator:
         return [self._registry[name][0] for _, name in resolved]
 
     def _on_signal(self, signum: int) -> None:
-        self.logger.info(f"🔔 Received signal {signal.Signals(signum).name}, initiating shutdown...")
+        self.logger.info(
+            f"🔔 Received signal {signal.Signals(signum).name}, initiating shutdown..."
+        )
         asyncio.create_task(self.shutdown())
 
     async def run(self, settings: Settings, app: DocsProvider) -> None:
@@ -119,7 +134,9 @@ class Orchestrator:
                 await svc.startup()
                 self.logger.info(f"🚀 Started {svc.name}")
             except Exception as e:
-                self.logger.error(f"❌ Failed to start {svc.name}", extra={"error": str(e)})
+                self.logger.error(
+                    f"❌ Failed to start {svc.name}", extra={"error": str(e)}
+                )
                 raise
 
         for task_fn in self.startup_tasks:
@@ -145,7 +162,9 @@ class Orchestrator:
                 await svc.shutdown()
                 self.logger.info(f"🛑 Stopped {svc.name}")
             except Exception as e:
-                self.logger.error(f"❌ Shutdown failed for {svc.name}", extra={"error": str(e)})
+                self.logger.error(
+                    f"❌ Shutdown failed for {svc.name}", extra={"error": str(e)}
+                )
 
         for task_fn in self.shutdown_tasks:
             try:

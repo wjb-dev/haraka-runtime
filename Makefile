@@ -12,10 +12,10 @@ dev-setup:
 	@skaffold version >/dev/null 2>&1 || (echo "Error: Skaffold not found" && exit 1)
 
 	@echo "🚀 Creating/updating Kind cluster..."
-	@kind create cluster --name haraka --config=config/kind-cluster.yaml || true
+	@kind create cluster --name haraka --config=infra/kind/kind-cluster.yaml || true
 
 	@echo "☁️ Deploying Helm chart to Kind..."
-	@helm upgrade --install haraka ./chart --namespace haraka --create-namespace
+	@helm upgrade --install haraka ./infra/helm --namespace haraka --create-namespace
 
 	@echo "⌛ Waiting for all pods to be READY in 'haraka' namespace..."
 	@kubectl wait --for=condition=ready pod --all --namespace haraka --timeout=120s

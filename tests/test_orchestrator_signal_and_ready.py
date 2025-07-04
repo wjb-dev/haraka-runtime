@@ -6,9 +6,9 @@ from src.haraka_runtime.core.interfaces import Adapter
 from src.haraka_runtime.orchestrator.orchestrator import Orchestrator, LifecycleState
 
 
-# ──────────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────────
 # Dummy adapter for mark_ready tests
-# ──────────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────────
 class ReadyAdapter(Adapter):
     def __init__(self, name: str, ready_after: float, runtime: Orchestrator = None):
         self.name = name
@@ -24,15 +24,18 @@ class ReadyAdapter(Adapter):
     async def shutdown(self):
         pass
 
-# ──────────────────────────────────────────────────────────────────────────────
+
+# ────────────────────────────────────────────────────────────────────────────
 # Tests for wait_for_all_ready
-# ──────────────────────────────────────────────────────────────────────────────
+# ────────────────────────────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_wait_for_all_ready_completes():
     """
     Two Adapters mark themselves ready after a short delay;
-    wait_for_all_ready should return without error once both have run startup().
+    wait_for_all_ready should return without error once both
+    have run startup().
     """
     orch = Orchestrator()
 
@@ -52,6 +55,7 @@ async def test_wait_for_all_ready_completes():
     await task1
     await task2
 
+
 @pytest.mark.asyncio
 async def test_wait_for_all_ready_times_out():
     """
@@ -62,9 +66,11 @@ async def test_wait_for_all_ready_times_out():
     class NeverReady(Adapter):
         def __init__(self, name: str):
             self.name = name
+
         async def startup(self):
             # Do nothing (never calls mark_ready)
             await asyncio.sleep(0)
+
         async def shutdown(self):
             pass
 
@@ -74,9 +80,11 @@ async def test_wait_for_all_ready_times_out():
     with pytest.raises(asyncio.TimeoutError):
         await orch.wait_for_all_ready(timeout=0.1)
 
+
 # ──────────────────────────────────────────────────────────────────────────────
 # Test for UNIX signal handling
 # ──────────────────────────────────────────────────────────────────────────────
+
 
 @pytest.mark.asyncio
 async def test_signal_handler_triggers_shutdown(monkeypatch):
@@ -87,6 +95,7 @@ async def test_signal_handler_triggers_shutdown(monkeypatch):
     orch = Orchestrator()
 
     called = False
+
     async def fake_shutdown():
         nonlocal called
         called = True

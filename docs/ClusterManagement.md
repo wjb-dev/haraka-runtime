@@ -25,7 +25,7 @@
 ### Create Cluster
 
 ```bash
-kind create cluster   --name haraka   --config=config/kind-cluster.yaml  # annotated Kind config
+kind create cluster   --name haraka   --config=infra/kind/kind-cluster.yaml  # annotated Kind config
 ```
 
 - **Context Name:** `kind-haraka`
